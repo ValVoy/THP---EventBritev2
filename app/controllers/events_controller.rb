@@ -1,9 +1,29 @@
 class EventsController < ApplicationController
-  before_action :authenticate_user!, only: [ :new, :create, :edit, :update, :destroy ]
-  before_action :is_admin?, only: [ :edit, :update, :destroy ]
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :is_admin?, only: [:edit, :update, :destroy]
+
+  include Pagy::Method
 
   def index
-    @events = Event.all.order(created_at: :desc)
+    @events = Event.all
+
+    if params[:query].present?
+      @events = @events.where("title ILIKE ?", "%#{params[:query]}%")
+    end
+
+    @events = @events.where(location: params[:city]) if params[:city].present?
+
+    if params[:max_price].present?
+      @events = @events.where(price: 0..params[:max_price].to_i)
+    end
+
+    @events = case params[:sort]
+              when 'price_asc' then @events.order(price: :asc)
+              when 'date_asc'  then @events.order(start_date: :asc)
+              else @events.order(created_at: :desc)
+              end
+
+    @pagy, @events = pagy(:offset, @events, limit: 9)
   end
 
   def show

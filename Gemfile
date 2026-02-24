@@ -74,3 +74,6 @@ group :development do
 end
 
 gem "devise"
+gem "stripe"
+gem "faker"
+gem "pagy"

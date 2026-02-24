@@ -9,8 +9,21 @@ class Event < ApplicationRecord
   validate :duration_is_multiple_of_five
   validates :title, presence: true, length: { in: 5..140 }
   validates :description, presence: true, length: { in: 20..1000 }
-  validates :price, presence: true, numericality: { only_integer: true, in: 1..1000 }
+
+  # MODIFICATION : On autorise 0 pour les événements gratuits
+  validates :price, presence: true, numericality: { only_integer: true, in: 0..1000 }
+
   validates :location, presence: true
+
+  # ASTUCE BONNE PRATIQUE : Méthode d'instance pour la lisibilité
+  def is_free?
+    price == 0
+  end
+
+  
+  def end_date
+  start_date + duration.minutes
+  end
 
   private
 
@@ -21,4 +34,5 @@ class Event < ApplicationRecord
   def duration_is_multiple_of_five
     errors.add(:duration, "doit être un multiple de 5") if duration.present? && duration % 5 != 0
   end
+
 end

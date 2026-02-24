@@ -1,0 +1,40 @@
+<div class="container py-5">
+  <div class="card border-0 rounded-4 overflow-hidden" style="background: #161b22; border: 1px solid #30363d !important;">
+    <div class="p-4 border-bottom border-secondary bg-dark d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="text-white h3 mb-1">Participants à : <%= @event.title %></h1>
+        <p class="text-secondary mb-0"><%= @event.attendances.count %> personnes inscrites</p>
+      </div>
+      <div>
+        <%= link_to "Modifier l'événement", edit_event_path(@event), class: "btn btn-outline-warning btn-sm rounded-pill" %>
+        <%= button_to "Supprimer", event_path(@event), method: :delete, data: { confirm: "Êtes-vous sûr ?" }, class: "btn btn-outline-danger btn-sm rounded-pill d-inline-block" %>
+      </div>
+    </div>
+    
+    <div class="card-body p-0">
+      <table class="table table-dark table-hover mb-0">
+        <thead class="text-secondary small">
+          <tr>
+            <th class="ps-4 py-3">NOM / EMAIL</th>
+            <th class="py-3">DATE D'INSCRIPTION</th>
+            <th class="py-3 text-end pe-4">STATUT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @event.attendances.each do |attendance| %>
+            <tr class="align-middle border-secondary">
+              <td class="ps-4 py-3">
+                <div class="fw-bold text-white"><%= attendance.user.email %></div>
+              </td>
+              <td class="text-secondary"><%= attendance.created_at.strftime("%d/%m/%Y") %></td>
+              <td class="text-end pe-4">
+                <span class="badge bg-success-subtle text-success border border-success px-3">Confirmé</span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <%= link_to "← Retour à l'événement", event_path(@event), class: "btn btn-link text-secondary mt-3" %>
+</div>

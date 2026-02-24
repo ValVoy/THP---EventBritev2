@@ -1,0 +1,18 @@
+<div class="text-center py-5 mb-4">
+  <h1 class="fw-bold display-5 text-white mb-3">
+    Découvrez les meilleurs événements 🎟️
+  </h1>
+  <p class="text-secondary fs-5 mb-4">
+    Concerts, conférences, ateliers... trouvez ce qui vous correspond.
+  </p>
+  <div class="d-flex justify-content-center">
+    <%= form_with url: events_path, method: :get, class: "d-flex gap-2" do |f| %>
+      <%= f.text_field :query,
+            value: params[:query],
+            placeholder: "Rechercher un événement...",
+            class: "form-control rounded-pill bg-dark text-white border-secondary",
+            style: "max-width: 400px;" %>
+      <%= f.submit "Rechercher", class: "btn btn-primary rounded-pill px-4 fw-bold" %>
+    <% end %>
+  </div>
+</div>

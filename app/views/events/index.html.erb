@@ -1,33 +1,39 @@
-<div class="container mt-5">
-  <div class="p-5 mb-5 rounded-5 shadow-lg text-center" style="background: linear-gradient(145deg, #0d1117 0%, #161b22 100%); border: 1px solid #30363d;">
-    <h1 class="display-3 fw-bold text-white mb-3">Découvrez. Participez. <span class="text-primary">Créez.</span></h1>
-    <p class="lead text-secondary mb-4 fs-4">La plateforme communautaire pour vos événements locaux.</p>
-    <%= link_to "Proposer un événement", new_event_path, class: "btn btn-primary btn-lg rounded-pill px-5 fw-bold", style: "background-color: #238636; border-color: #2ea043;" %>
-  </div>
+<div class="container mt-5 mb-5">
+  <%= render 'hero_section' %>
+  <div id="events-grid" class="mb-5">
+    <div class="card p-4 border-0 rounded-4 shadow-sm mb-4" style="background: #161b22; border: 1px solid #30363d !important;">
+      <%= form_with url: events_path, method: :get, class: "row g-3 align-items-end" do |f| %>
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-white m-0">| Prochains événements</h2>
-  </div>
-
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    <% @events.each do |event| %>
-      <div class="col">
-        <div class="card h-100 border-0 rounded-4 shadow-sm custom-card" style="background: #161b22; border: 1px solid #30363d !important;">
-          <div class="card-body p-4 text-center">
-            <h4 class="card-title fw-bold text-white mb-3"><%= event.title %></h4>
-            <p class="text-secondary small mb-4"><%= truncate(event.description, length: 100) %></p>
-            <div class="d-flex justify-content-between align-items-center mt-auto">
-              <span class="text-success fw-bold"><%= event.price %> €</span>
-              <%= link_to "Détails", event_path(event), class: "btn btn-outline-primary rounded-pill px-4" %>
-            </div>
-          </div>
+        <div class="col-md-3">
+          <label class="form-label text-secondary small">Ville</label>
+          <%= f.select :city, Event.distinct.pluck(:location), { include_blank: "Toutes les villes", selected: params[:city] }, { class: "form-select bg-dark text-white border-secondary rounded-pill" } %>
         </div>
-      </div>
-    <% end %>
+
+        <div class="col-md-4">
+          <label class="form-label text-secondary small">Prix max : <span id="priceValue" class="text-success fw-bold"><%= params[:max_price] || 100 %></span> €</label>
+          <%= f.range_field :max_price, in: 0..100, step: 5, value: params[:max_price] || 100, class: "form-range", id: "priceRange", oninput: "document.getElementById('priceValue').innerText = this.value" %>
+          <%= f.hidden_field :min_price, value: 0 %>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label text-secondary small">Trier par</label>
+          <%= f.select :sort, [["Plus récent", "newest"], ["Moins cher", "price_asc"], ["Plus proche", "date_asc"]], { selected: params[:sort] }, { class: "form-select bg-dark text-white border-secondary rounded-pill" } %>
+        </div>
+
+        <div class="col-md-2 d-grid">
+          <%= f.submit "Explorer", class: "btn btn-primary rounded-pill fw-bold" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <% @events.each do |event| %>
+        <%= render 'event_card', event: event %>
+      <% end %>
+    </div>
+
+    <div class="d-flex justify-content-center mt-5">
+      <%== @pagy.series_nav %>
+    </div>
   </div>
 </div>
-
-<style>
-  .custom-card { transition: all 0.3s ease; }
-  .custom-card:hover { transform: translateY(-8px); border-color: #58a6ff !important; box-shadow: 0 10px 20px rgba(0,0,0,0.4) !important; }
-</style>

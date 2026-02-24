@@ -7,6 +7,15 @@
         </div>
         <div class="card-body p-5">
           <%= form_with model: @event, local: true do |f| %>
+            <% if @event.errors.any? %>
+              <div class="alert alert-danger rounded-3 mb-4">
+                <ul class="mb-0">
+                  <% @event.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
             <div class="mb-4">
               <%= f.label :title, "Titre", class: "form-label text-secondary small fw-bold" %>
               <%= f.text_field :title, class: "form-control bg-dark text-white border-secondary p-3 shadow-none" %>

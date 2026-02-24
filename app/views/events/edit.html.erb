@@ -1,0 +1,17 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="background: #161b22; border: 1px solid #30363d !important;">
+        <div class="p-4 border-bottom border-secondary bg-dark">
+          <h1 class="text-white h3 mb-0">Modifier mon événement</h1>
+          <p class="text-secondary mb-0">Ajustez les détails de votre session</p>
+        </div>
+        <div class="card-body p-4">
+          <%# On appelle le partial et on lui passe l'événement @event %>
+          <%= render 'form', event: @event %>
+        </div>
+      </div>
+      <%= link_to "← Annuler et revenir", event_path(@event), class: "btn btn-link text-secondary mt-3" %>
+    </div>
+  </div>
+</div>

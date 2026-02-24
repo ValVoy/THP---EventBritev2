@@ -1,0 +1,23 @@
+<div class="d-grid gap-2">
+  <% if user_signed_in? %>
+    <% if current_user == event.admin %>
+      <%# L'organisateur voit son lien vers l'espace admin %>
+      <%= link_to "Mon espace événement", event_attendances_path(event), class: "btn btn-outline-info rounded-pill py-3 fw-bold" %>
+    <% elsif event.users.include?(current_user) %>
+      <%# Déjà inscrit %>
+      <button class="btn btn-secondary rounded-pill py-3 fw-bold" disabled>✅ Déjà inscrit</button>
+    <% else %>
+      <%# Nouveau participant %>
+      <% if event.price > 0 %>
+        <%# Événement Payant : Direction Stripe %>
+        <%= button_to "S'inscrire (#{event.price}€)", checkout_create_path(event_id: event.id), method: :post, data: { turbo: false }, class: "btn btn-success rounded-pill py-3 fw-bold" %>
+      <% else %>
+        <%# Événement Gratuit : Inscription directe %>
+        <%= button_to "S'inscrire gratuitement", event_attendances_path(event), method: :post, class: "btn btn-primary rounded-pill py-3 fw-bold" %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%# Pas connecté %>
+    <%= link_to "Se connecter pour participer", new_user_session_path, class: "btn btn-primary rounded-pill py-3 fw-bold" %>
+  <% end %>
+</div>
